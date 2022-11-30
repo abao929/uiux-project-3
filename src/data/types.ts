@@ -68,8 +68,8 @@ export interface Drink {
   alcoholic: Alcoholic
   glass: Glass
   instructions: string
-  ingredients: (string | null)[]
-  measures: (string | null)[]
+  ingredients: string[]
+  measures: string[]
   numIngredients: number
   thumbnail: string
 }

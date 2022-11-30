@@ -9,12 +9,13 @@ type Props = {
 }
 
 let DrinkCard = ({ drink, add, remove }: Props) => {
+  let { name, ingredients, thumbnail } = { ...drink }
   const [added, setAdded] = useState(false)
   let addButton = (
     <button
       className='add'
       onClick={() => {
-        add(strDrink, ingredients)
+        add(name, ingredients)
         setAdded(true)
       }}
     >
@@ -25,7 +26,7 @@ let DrinkCard = ({ drink, add, remove }: Props) => {
     <button
       className='remove'
       onClick={() => {
-        remove(strDrink, ingredients)
+        remove(name, ingredients)
         setAdded(false)
       }}
     >
@@ -35,103 +36,17 @@ let DrinkCard = ({ drink, add, remove }: Props) => {
   return (
     <div className={css.container}>
       <img
-        src={require(`../data/${thumbnailFilename}`)}
-        alt={`${strDrink}`}
+        src={require(`../data/thumbnails/${thumbnail}`)}
+        alt={`${name}`}
       ></img>
-      {strDrink}
+      {name}
       {added ? removeButton : addButton}
     </div>
   )
 }
 
 // let DrinkPage = ({
-//   strDrink,
-//   strCategory,
-//   strAlcoholic,
-//   strInstructions,
-//   thumbnailFilename,
-//   strIngredient1,
-//   strIngredient2,
-//   strIngredient3,
-//   strIngredient4,
-//   strIngredient5,
-//   strIngredient6,
-//   strIngredient7,
-//   strIngredient8,
-//   strIngredient9,
-//   strIngredient10,
-//   strIngredient11,
-//   strIngredient12,
-//   strIngredient13,
-//   strIngredient14,
-//   strIngredient15,
-//   strMeasure1,
-//   strMeasure2,
-//   strMeasure3,
-//   strMeasure4,
-//   strMeasure5,
-//   strMeasure6,
-//   strMeasure7,
-//   strMeasure8,
-//   strMeasure9,
-//   strMeasure10,
-//   strMeasure11,
-//   strMeasure12,
-//   strMeasure13,
-//   strMeasure14,
-//   strMeasure15,
 // }: drink) => {
-//   let ingredients = [
-//     strIngredient1,
-//     strIngredient2,
-//     strIngredient3,
-//     strIngredient4,
-//     strIngredient5,
-//     strIngredient6,
-//     strIngredient7,
-//     strIngredient8,
-//     strIngredient9,
-//     strIngredient10,
-//     strIngredient11,
-//     strIngredient12,
-//     strIngredient13,
-//     strIngredient14,
-//     strIngredient15,
-//   ]
-//   let measures = [
-//     strMeasure1,
-//     strMeasure2,
-//     strMeasure3,
-//     strMeasure4,
-//     strMeasure5,
-//     strMeasure6,
-//     strMeasure7,
-//     strMeasure8,
-//     strMeasure9,
-//     strMeasure10,
-//     strMeasure11,
-//     strMeasure12,
-//     strMeasure13,
-//     strMeasure14,
-//     strMeasure15,
-//   ]
-//   console.log(ingredients, measures)
-//   let numIngredients = 15
-//   for (let i = 0; i < ingredients.length; i++) {
-//     if (!ingredients[i]) {
-//       numIngredients = i
-//       break
-//     }
-//   }
-//   ingredients = ingredients.slice(0, numIngredients)
-//   measures = measures.slice(0, numIngredients)
-//   let zippedIngredients = []
-//   for (let i = 0; i < numIngredients; i++) {
-//     let m = measures[i] ? `${measures[i]} of ` : ''
-//     let s = `${m}${ingredients[i]}`
-//     console.log(s)
-//     zippedIngredients.push(<li>{s}</li>)
-//   }
 //   console.log(ingredients, measures)
 //   return (
 //     <div>
