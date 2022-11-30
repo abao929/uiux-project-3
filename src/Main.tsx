@@ -6,13 +6,22 @@ import Dropdown from './components/Dropdown'
 import css from './Main.module.sass'
 import { Drink } from './data/types'
 
+const SORT_VALS = [
+  'Alphabetically - A to Z',
+  'Alphabetically - Z to A',
+  'Ingredients - Low to High',
+  'Ingredients - High to Low',
+]
+
+const FILTER_KEY = []
+
 export default function Main() {
   const [ingredientMap, setIngredientMap] = useState<Map<string, number>>(
     new Map()
   )
   const [ingredientList, setIngredientList] = useState<string[]>([])
   const [filterKey, setFilterKey] = useState('')
-  const [sortKey, setSortKey] = useState('Alphabetically - A to Z')
+  const [sortKey, setSortKey] = useState(SORT_VALS[0])
   const [curPage, setCurPage] = useState(1)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
 
@@ -44,30 +53,28 @@ export default function Main() {
     setIngredientList(Array.from(ingredientMap.keys()))
   }
 
-  let sortVals = [
-    'Alphabetically - A to Z',
-    'Alphabetically - Z to A',
-    'Ingredients - Low to High',
-    'Ingredients - High to Low',
-  ]
-
   let sortData = () => {
-    let fn
+    let fn: (a: Drink, b: Drink) => number
     switch (sortKey) {
       case 'Alphabetically - A to Z':
-        fn = (a: drink, b: drink) => a.strDrink.localeCompare(b.strDrink)
+        fn = (a: Drink, b: Drink) => a.name.localeCompare(b.name)
         break
       case 'Alphabetically - Z to A':
-        fn = (a: drink, b: drink) => b.strDrink.localeCompare(a.strDrink)
+        fn = (a: Drink, b: Drink) => b.name.localeCompare(a.name)
         break
       case 'Ingredients - Low to High':
-      // fn = (a: drink, b: drink) => a.drink - b.drink
+        fn = (a: Drink, b: Drink) => a.numIngredients - b.numIngredients
+        break
+      case 'Ingredients - High to Low':
+        fn = (a: Drink, b: Drink) => b.numIngredients - a.numIngredients
+        break
     }
 
-    data.sort()
+    data.sort((a: Drink, b: Drink) => fn(a, b))
   }
 
-  let data = drinks.slice(0, 10)
+  let data = Drinks.slice(0, 10)
+  sortData()
   return (
     <div>
       <h1 className='title'>ivrogne</h1>
@@ -79,7 +86,7 @@ export default function Main() {
               title='Sort By'
               curItem={sortKey}
               setItem={setSortKey}
-              values={sortVals}
+              values={SORT_VALS}
             >
               Hey lol
             </Dropdown>
