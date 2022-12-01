@@ -115,10 +115,12 @@ export default function Main() {
   }, [alcs, sortKey])
 
   return (
-    <div>
-      <h1 className='title'>ivrogne</h1>
-      <h2 className='subtitle'>drinking alone again I see</h2>
-      <div className={css.container}>
+    <div className={css.container}>
+      <div className={css.titleText}>
+        <h1 className='title'>ivrogne</h1>
+        <h2 className='subtitle'>drinking alone again I see</h2>
+      </div>
+      <div className={css.contentContainer}>
         <div className={css.menu}>
           <div className={css.sort}>
             <Dropdown

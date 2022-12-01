@@ -1,6 +1,77 @@
+@import '../variables'
+
 .container
 	display: flex
 	flex-direction: column
-	text-align: center
+	align-items: center
+	border-radius: .5em
+	background-color: $primary
 	img
-		max-width: 100%
+		margin-top: 10%
+		max-width: 80%
+		// border-radius: .5rem .5rem 0 0
+
+.info
+	// background-color: $primary
+	min-height: calc(max(4rem, 4vh))
+	display: flex
+	flex-direction: column
+	align-items: center
+	padding: .5em 0
+
+	// border-radius: 0 0 .5rem .5rem
+	& > *
+		margin: .25rem
+
+.star
+	width: 1rem
+	margin-right: 1.25rem
+	path
+		fill: #576b33
+
+.showButton
+
+	flex: 3
+
+.save
+	flex: 2
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	align-items: center
+	gap: .25rem
+	p
+		margin-left: 1.25rem
+
+.saved
+	fill: #576b33
+
+
+// .showButton
+// 	border: 2px solid #d4a373
+// 	padding: .5rem 1rem
+// 	background-color: #fefae0
+// 	color: #d4a373
+// 	font-weight: 500
+// 	font-size: calc(max(1rem, 1vw))
+
+.buttons
+	width: 100%
+	display: flex
+	flex-direction: row
+	justify-content: space-between
+	padding: 0 .5rem
+	gap: 1rem
+
+button
+	border: 1.5px solid #86945e
+	border-radius: .5rem
+	padding: .75em 0
+	background-color: #f0ead2
+	color: #576b33
+	font-weight: 500
+	// font-size: calc(max(1rem, 1vw))
+	// width: 80%
+	// flex: 1
+	&:hover
+		border-color: #576b33

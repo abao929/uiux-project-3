@@ -1,6 +1,16 @@
+html
+	background-color: #f0ead2
+
+.container
+	padding: 0 calc(max(4rem, 4vw))
+
+.titleText
+	padding: calc(max(2rem, 2vh)) 0
+	
 .drinks
 	display: grid
-	grid-template-columns: repeat(4, 1fr)
+	gap: 1.5em
+	grid-template-columns: repeat(3, 1fr)
 	@media (max-width: 992px)
 		grid-template-columns: repeat(3, 1fr)
 	@media (max-width: 480px)
@@ -9,6 +19,6 @@
 .menu
 
 
-.container
+.contentContainer
 	display: grid
-	grid-template-columns: 1fr 4fr 1fr
+	grid-template-columns: 1fr 4fr
