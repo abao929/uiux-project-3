@@ -1,29 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './global.sass'
 import { DrinkCard } from './components/Drink'
 import { Drinks } from './data/drinks'
 import Dropdown from './components/Dropdown'
 import css from './Main.module.sass'
 import { Drink } from './data/types'
-
-const SORT_VALS = [
-  'Alphabetically - A to Z',
-  'Alphabetically - Z to A',
-  'Ingredients - Low to High',
-  'Ingredients - High to Low',
-]
+import { SORT_VALS, ALCOHOL_TYPES } from './Constants'
 
 const FILTER_KEY = []
+const ALL_ALC_TYPES = new Set(Array.from(ALCOHOL_TYPES.keys()))
 
 export default function Main() {
   const [ingredientMap, setIngredientMap] = useState<Map<string, number>>(
     new Map()
   )
   const [ingredientList, setIngredientList] = useState<string[]>([])
-  const [filterKey, setFilterKey] = useState('')
+  const [alcs, setAlcs] = useState(new Set(ALL_ALC_TYPES))
   const [sortKey, setSortKey] = useState(SORT_VALS[0])
   const [curPage, setCurPage] = useState(1)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const [drinks, setDrinks] = useState(Drinks)
 
   let addDrink = (name: string, ingredients: string[]) => {
     if (favorites.has(name)) return
@@ -53,6 +49,33 @@ export default function Main() {
     setIngredientList(Array.from(ingredientMap.keys()))
   }
 
+  let toggleCheckbox = (alc: string) => {
+    // console.log('what')
+    let temp = alcs
+    if (alcs.has(alc)) {
+      temp.delete(alc)
+    } else {
+      temp.add(alc)
+    }
+    setAlcs(new Set(temp))
+    console.log('what', temp)
+  }
+
+  let filterData = () => {
+    let ingredientSet = new Set()
+    alcs.forEach((alc) => {
+      ALCOHOL_TYPES.get(alc)?.forEach((a) => ingredientSet.add(a))
+    })
+    console.log(ingredientSet)
+    let temp = Drinks.filter((drink) => {
+      for (let i of drink.ingredients) {
+        if (ingredientSet.has(i)) return true
+      }
+      return false
+    })
+    setDrinks(temp)
+  }
+
   let sortData = () => {
     let fn: (a: Drink, b: Drink) => number
     switch (sortKey) {
@@ -70,11 +93,27 @@ export default function Main() {
         break
     }
 
-    data.sort((a: Drink, b: Drink) => fn(a, b))
+    drinks.sort((a: Drink, b: Drink) => fn(a, b))
   }
+  let checkboxes: JSX.Element[] = []
+  ALL_ALC_TYPES.forEach((type) => {
+    checkboxes.push(
+      <div>
+        <input
+          type='checkbox'
+          value={type}
+          checked={alcs.has(type)}
+          onChange={() => toggleCheckbox(type)}
+        />
+        <label>{type}</label>
+      </div>
+    )
+  })
+  useEffect(() => {
+    filterData()
+    sortData()
+  }, [alcs, sortKey])
 
-  let data = Drinks.slice(0, 10)
-  sortData()
   return (
     <div>
       <h1 className='title'>ivrogne</h1>
@@ -87,21 +126,34 @@ export default function Main() {
               curItem={sortKey}
               setItem={setSortKey}
               values={SORT_VALS}
-            >
-              Hey lol
-            </Dropdown>
+            />
+            <div className='alcFilter'>
+              <div>
+                <input
+                  type='checkbox'
+                  value='all'
+                  checked={alcs.size === ALL_ALC_TYPES.size}
+                  onChange={() => {
+                    if (alcs.size === ALL_ALC_TYPES.size) setAlcs(new Set())
+                    else setAlcs(new Set(ALL_ALC_TYPES))
+                  }}
+                />
+                <label>Select/Deselect All</label>
+              </div>
+              {checkboxes.map((a) => a)}
+            </div>
           </div>
           <div className={css.filters}></div>
           <div className={css.favorites}></div>
         </div>
         <div className={css.drinks}>
-          {data.map((ele, _) => (
-            <DrinkCard
-              drink={ele}
-              add={addDrink}
-              remove={removeDrink}
-            />
-          ))}
+          {drinks.length ? (
+            drinks.map((ele, _) => (
+              <DrinkCard drink={ele} add={addDrink} remove={removeDrink} />
+            ))
+          ) : (
+            <div>Please select some alcohol types to get started</div>
+          )}
         </div>
         <div className={css.ingredients}>
           Necessary Ingredients
