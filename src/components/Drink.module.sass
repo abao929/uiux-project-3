@@ -2,39 +2,59 @@
 
 .container
 	display: flex
-	flex-direction: column
-	align-items: center
-	border-radius: .5em
+	flex-direction: row
 	background-color: $primary
-	img
-		margin-top: 10%
-		max-width: 80%
-		// border-radius: .5rem .5rem 0 0
+	border-radius: 1rem
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px
 
 .info
-	// background-color: $primary
-	min-height: calc(max(4rem, 4vh))
+	flex: 1
+	padding: 1.25rem
 	display: flex
 	flex-direction: column
-	align-items: center
-	padding: .5em 0
 
-	// border-radius: 0 0 .5rem .5rem
-	& > *
-		margin: .25rem
+.text
+	flex: 1
+	display: flex
+	flex-direction: column
+	justify-content: space-evenly
+	& > div
+		padding: .25em 0
+	.ingredients	
+		font: 300 calc(max(.75rem, .75vw)) Roboto
+	.instructions
+		font: 400 calc(max(.75rem, .75vw)) Roboto
 
-.star
-	width: 1rem
-	margin-right: 1.25rem
-	path
-		fill: #576b33
+.name
+	font: 500 calc(max(1.5rem, 1.25vw)) Roboto
 
-.showButton
+.ingredients, .instructions
 
-	flex: 3
+img
+	height: auto
+	width: auto
+	max-width: 300px
+	border-radius: 0 1rem 1rem 0
+
+button
+	border: 1.5px solid #86945e
+	border-radius: .5rem
+	padding: .75em 0
+	background-color: #f0ead2
+	color: #576b33
+	font: 400 1rem Roboto
+	cursor: pointer
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+	// font-size: calc(max(1rem, 1vw))
+	// width: 80%
+	// flex: 1
+	transition: all .3s ease-in-out
+	&:hover
+		border-color: #576b33
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px
 
 .save
-	flex: 2
+	width: 70%
 	display: flex
 	flex-direction: row
 	justify-content: space-between
@@ -43,35 +63,8 @@
 	p
 		margin-left: 1.25rem
 
-.saved
-	fill: #576b33
-
-
-// .showButton
-// 	border: 2px solid #d4a373
-// 	padding: .5rem 1rem
-// 	background-color: #fefae0
-// 	color: #d4a373
-// 	font-weight: 500
-// 	font-size: calc(max(1rem, 1vw))
-
-.buttons
-	width: 100%
-	display: flex
-	flex-direction: row
-	justify-content: space-between
-	padding: 0 .5rem
-	gap: 1rem
-
-button
-	border: 1.5px solid #86945e
-	border-radius: .5rem
-	padding: .75em 0
-	background-color: #f0ead2
-	color: #576b33
-	font-weight: 500
-	// font-size: calc(max(1rem, 1vw))
-	// width: 80%
-	// flex: 1
-	&:hover
-		border-color: #576b33
+.star
+	width: 1rem
+	margin-right: 1.25rem
+	path
+		fill: #576b33

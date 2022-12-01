@@ -4,8 +4,8 @@ import { ReactComponent as DropdownArrow } from './assets/icons/dropdown-arrow.s
 
 type Props = {
   title: string
-  curItem: string
-  setItem: Dispatch<string>
+  curItem: any
+  setItem: Dispatch<any>
   values: string[]
   children?: React.ReactNode
 }
@@ -14,10 +14,7 @@ let Dropdown = ({ title, curItem, setItem, values, children }: Props) => {
   const [open, setOpen] = useState(false)
   return (
     <div className={css.container}>
-      <div
-        className={css.title}
-        onClick={() => setOpen(!open)}
-      >
+      <div className={css.title} onClick={() => setOpen(!open)}>
         {title}: {curItem}
         <DropdownArrow className={open ? css.rotate : ''} />
       </div>

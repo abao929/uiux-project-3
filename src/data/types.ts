@@ -1,6 +1,8 @@
-export type CreativeCommonsConfirmed = 'Yes' | 'No'
-
-export type Alcoholic = 'Alcoholic' | 'Non alcoholic' | 'Optional alcohol'
+export type Alcoholic =
+  | 'Alcoholic'
+  | 'Non alcoholic'
+  | 'Optional alcohol'
+  | 'All'
 
 export type IBA = 'Contemporary Classics' | 'Unforgettables' | 'New Era Drinks'
 

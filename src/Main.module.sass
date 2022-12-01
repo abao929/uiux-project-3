@@ -1,8 +1,10 @@
+@import "variables"	
+
 html
 	background-color: #f0ead2
 
 .container
-	padding: 0 calc(max(4rem, 4vw))
+	padding: 0 calc(max(3rem, 3vw))
 
 .titleText
 	padding: calc(max(2rem, 2vh)) 0
@@ -10,15 +12,36 @@ html
 .drinks
 	display: grid
 	gap: 1.5em
-	grid-template-columns: repeat(3, 1fr)
+	grid-template-columns: repeat(2, 1fr)
+	grid-template-rows: 1fr
 	@media (max-width: 992px)
 		grid-template-columns: repeat(3, 1fr)
 	@media (max-width: 480px)
 		grid-template-columns: repeat(1, 1fr)
 
 .menu
+	position: sticky
+	top: 10vh
+	max-height: 80vh
+	display: flex
+	flex-direction: column
+	border: 2px solid #576b33
+	border-radius: .5rem
+	padding: 1rem
+	margin-right: calc(max(3rem, 3vw))
+
+.ingredients
+	flex: 1
+	overflow: auto
 
 
 .contentContainer
 	display: grid
 	grid-template-columns: 1fr 4fr
+	align-items: start
+
+.title
+	font: 400 clamp(2rem, 7vw, 5rem) scotch-display
+
+.subtitle
+	font: 200 clamp(1rem, 1.5vw, 2rem) Roboto
