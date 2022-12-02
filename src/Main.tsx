@@ -95,10 +95,10 @@ export default function Main() {
   let sortData = (data: Drink[]) => {
     let fn: (a: Drink, b: Drink) => number
     switch (sortKey) {
-      case 'Alphabetically - A to Z':
+      case 'A to Z':
         fn = (a: Drink, b: Drink) => a.name.localeCompare(b.name)
         break
-      case 'Alphabetically - Z to A':
+      case 'Z to A':
         fn = (a: Drink, b: Drink) => b.name.localeCompare(a.name)
         break
       case 'Ingredients - Asc':
@@ -153,18 +153,30 @@ export default function Main() {
   )
   let dots = <div className={css.dots}>. . .</div>
 
-  let scrollTop = () => {
-    window.scrollTo({ top: 0, left: 0 })
-  }
+  let scrollTop = () => window.scrollTo({ top: 0, left: 0 })
 
   useEffect(() => {
     let temp = filterTypes()
-    if (JSON.stringify(temp) !== JSON.stringify(drinks)) setCurPage(1)
-    temp = sortData(temp)
+    if (JSON.stringify(temp) !== JSON.stringify(drinks)) {
+      setCurPage(1)
+      scrollTop()
+    }
+    let sorted = sortData(temp)
+    if (JSON.stringify(temp) !== JSON.stringify(sorted)) {
+      scrollTop()
+    }
+    setDrinks(sorted)
+    setRange(calcRange(sorted.length))
+  }, [alcs, alcoholic, sortKey, showFavorites])
+
+  useEffect(() => {
+    if (!showFavorites) {
+      return
+    }
+    let temp = filterTypes()
     setDrinks(temp)
     setRange(calcRange(temp.length))
-    scrollTop()
-  }, [alcs, alcoholic, sortKey, showFavorites, favorites])
+  }, [favorites])
 
   useEffect(() => {
     setRange(calcRange(drinks.length))
@@ -175,16 +187,20 @@ export default function Main() {
     <div className={css.container}>
       <div className={css.titleText}>
         <h1 className={css.title}>ivrogne</h1>
-        <h2 className={css.subtitle}>drinking alone again I see...</h2>
+        <h2 className={css.subtitle}>
+          find and make the perfect cocktails to drink alone
+        </h2>
       </div>
       <div className={css.contentContainer}>
         <div className={css.menu}>
-          <Dropdown
-            title='Sort'
-            curItem={sortKey}
-            setItem={setSortKey}
-            values={SORT_VALS}
-          />
+          <div>
+            <p className={`${css.optionTitle} ${css.first}`}>Sort</p>
+            <Dropdown
+              curItem={sortKey}
+              setItem={setSortKey}
+              values={SORT_VALS}
+            />
+          </div>
 
           <div className={css.alcoholic}>
             <p className={css.optionTitle}>Alcoholic</p>
@@ -208,14 +224,15 @@ export default function Main() {
               )
             })}
           </div>
-
-          <MultipleDropdown
-            title='Alcohol Type:'
-            items={alcs}
-            values={['Select/Deselect All'].concat(Array.from(ALL_ALC_TYPES))}
-            disabled={alcoholic !== 'All' && alcoholic !== 'Alcoholic'}
-            selectItem={(item) => toggleCheckbox(item)}
-          />
+          <div>
+            <div className={css.optionTitle}>Alcohol Type</div>
+            <MultipleDropdown
+              items={alcs}
+              values={['Select/Deselect All'].concat(Array.from(ALL_ALC_TYPES))}
+              disabled={alcoholic !== 'All' && alcoholic !== 'Alcoholic'}
+              selectItem={(item) => toggleCheckbox(item)}
+            />
+          </div>
 
           <div className={css.favoriteGroup}>
             <div className={css.optionTitle}>Other</div>

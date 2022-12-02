@@ -3,7 +3,6 @@ import css from './Dropdown.module.sass'
 import { ReactComponent as DropdownArrow } from './assets/icons/dropdown-arrow.svg'
 
 type Props = {
-  title: string
   curItem: any
   setItem: Dispatch<any>
   values: string[]
@@ -13,15 +12,15 @@ type Props = {
 }
 
 type MultProps = {
-  title: string
   selectItem: (item: string) => void
   values: string[]
+  title?: string
   items?: Set<string>
   disabled?: boolean
   children?: React.ReactNode
 }
 
-let Dropdown = ({ title, curItem, setItem, values, disabled }: Props) => {
+let Dropdown = ({ curItem, setItem, values, disabled }: Props) => {
   const [open, setOpen] = useState(false)
   return (
     <div className={`${css.container}`}>
@@ -29,7 +28,7 @@ let Dropdown = ({ title, curItem, setItem, values, disabled }: Props) => {
         className={`${css.title} ${css.option} ${css.main} ${open && css.open}`}
         onClick={() => setOpen(!open)}
       >
-        {title}: {curItem}
+        {curItem}
         <DropdownArrow className={open ? css.rotate : ''} />
       </div>
       {open && (

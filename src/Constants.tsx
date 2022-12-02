@@ -1,11 +1,6 @@
 import { Alcoholic } from './data/types'
 
-const SORT_VALS = [
-  'Alphabetically - A to Z',
-  'Alphabetically - Z to A',
-  'Ingredients - Asc',
-  'Ingredients - Dsc',
-]
+const SORT_VALS = ['A to Z', 'Z to A', 'Ingredients - Asc', 'Ingredients - Dsc']
 
 const ALCOHOL_TYPES: Map<string, Set<string>> = new Map()
 ALCOHOL_TYPES.set(
