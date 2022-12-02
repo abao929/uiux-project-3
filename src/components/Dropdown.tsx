@@ -8,13 +8,27 @@ type Props = {
   setItem: Dispatch<any>
   values: string[]
   children?: React.ReactNode
+  selectItem?: () => void
+  disabled?: boolean
 }
 
-let Dropdown = ({ title, curItem, setItem, values, children }: Props) => {
+type MultProps = {
+  title: string
+  selectItem: (item: string) => void
+  values: string[]
+  items?: Set<string>
+  disabled?: boolean
+  children?: React.ReactNode
+}
+
+let Dropdown = ({ title, curItem, setItem, values, disabled }: Props) => {
   const [open, setOpen] = useState(false)
   return (
-    <div className={css.container}>
-      <div className={css.title} onClick={() => setOpen(!open)}>
+    <div className={`${css.container}`}>
+      <div
+        className={`${css.title} ${css.option} ${css.main} ${open && css.open}`}
+        onClick={() => setOpen(!open)}
+      >
         {title}: {curItem}
         <DropdownArrow className={open ? css.rotate : ''} />
       </div>
@@ -22,7 +36,7 @@ let Dropdown = ({ title, curItem, setItem, values, children }: Props) => {
         <div className={`${css.options}`}>
           {values.map((val, _) => (
             <li
-              className={val === curItem ? css.active : ''}
+              className={`${css.option} ${val === curItem && css.active}`}
               onClick={() => setItem(val)}
             >
               {val}
@@ -34,4 +48,45 @@ let Dropdown = ({ title, curItem, setItem, values, children }: Props) => {
   )
 }
 
-export default Dropdown
+let MultipleDropdown = ({
+  title,
+  items,
+  selectItem,
+  values,
+  disabled,
+}: MultProps) => {
+  const [open, setOpen] = useState(false)
+  let itemsStr: string = !items
+    ? ''
+    : Array.from(items).length === 13
+    ? 'All'
+    : Array.from(items).length === 0
+    ? 'None'
+    : Array.from(items).length > 5
+    ? Array.from(items).slice(0, 5).join(', ') + '...'
+    : Array.from(items).join(', ')
+  return (
+    <div className={`${css.container} ${disabled && css.disabled}`}>
+      <div
+        className={`${css.title} ${css.option} ${css.main} ${open && css.open}`}
+        onClick={() => setOpen(!disabled && !open)}
+      >
+        {title} {itemsStr}
+        <DropdownArrow className={open ? css.rotate : ''} />
+      </div>
+      {open && (
+        <div className={`${css.options}`}>
+          {values.map((val, _) => (
+            <li
+              className={`${css.option} ${items?.has(val) && css.active}`}
+              onClick={() => selectItem(val)}
+            >
+              {val}
+            </li>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+export { Dropdown, MultipleDropdown }

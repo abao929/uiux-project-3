@@ -1,13 +1,15 @@
 @import "variables"	
 
 html
-	background-color: #f0ead2
+	// background-color: #f0ead2 
+	background-color: $bg
+	font: 400 calc(max(1rem, .75vw)) Roboto
 
 .container
 	padding: 0 calc(max(3rem, 3vw))
 
 .titleText
-	padding: calc(max(2rem, 2vh)) 0
+	padding: calc(max(3rem, 3vh)) 0
 	
 .drinks
 	display: grid
@@ -19,16 +21,6 @@ html
 	@media (max-width: 480px)
 		grid-template-columns: repeat(1, 1fr)
 
-.menu
-	position: sticky
-	top: 10vh
-	max-height: 80vh
-	display: flex
-	flex-direction: column
-	border: 2px solid #576b33
-	border-radius: .5rem
-	padding: 1rem
-	margin-right: calc(max(3rem, 3vw))
 
 .ingredients
 	flex: 1
@@ -45,3 +37,38 @@ html
 
 .subtitle
 	font: 200 clamp(1rem, 1.5vw, 2rem) Roboto
+
+	
+.menu
+	position: sticky
+	top: 20vh
+	min-height: 60vh
+	display: flex
+	flex-direction: column
+	justify-content: space-between
+	border: 2px solid #576b33
+	border-radius: .5rem
+	padding: 1.5rem 1rem
+	margin-right: calc(max(3rem, 3vw))
+
+.optionTitle
+	font: 300 calc(max(1.25rem, 1vw)) Roboto
+	padding: 1em 0 .25em 0
+
+.favoriteGroup, .alcoholic
+	padding-bottom: .5em
+
+.inputGroup
+	// border: 1px solid red
+	display: flex
+	align-items: center
+	cursor: pointer
+	font: 400 calc(max(1.25rem, 1vw)) Roboto
+	input
+		height: calc(max(1rem, .75vw))
+		width: calc(max(1rem, .75vw))
+	span
+		cursor: pointer
+		padding: .25em
+	label
+		cursor: pointer

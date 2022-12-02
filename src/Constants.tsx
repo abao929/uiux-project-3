@@ -1,8 +1,10 @@
+import { Alcoholic } from './data/types'
+
 const SORT_VALS = [
   'Alphabetically - A to Z',
   'Alphabetically - Z to A',
-  'Ingredients - Low to High',
-  'Ingredients - High to Low',
+  'Ingredients - Asc',
+  'Ingredients - Dsc',
 ]
 
 const ALCOHOL_TYPES: Map<string, Set<string>> = new Map()
@@ -205,4 +207,13 @@ ALCOHOL_TYPES.set(
   ])
 )
 
-export { SORT_VALS, ALCOHOL_TYPES }
+const ALC_TAGS: Alcoholic[] = [
+  'All',
+  'Alcoholic',
+  'Non alcoholic',
+  'Optional alcohol',
+]
+
+const MAX_ITEMS = 20
+
+export { SORT_VALS, ALCOHOL_TYPES, ALC_TAGS, MAX_ITEMS }

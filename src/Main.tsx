@@ -2,19 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './global.sass'
 import { DrinkCard } from './components/Drink'
 import { Drinks } from './data/drinks'
-import Dropdown from './components/Dropdown'
+import { Dropdown, MultipleDropdown } from './components/Dropdown'
 import css from './Main.module.sass'
 import { Drink, Alcoholic } from './data/types'
-import { SORT_VALS, ALCOHOL_TYPES } from './Constants'
+import { SORT_VALS, ALCOHOL_TYPES, ALC_TAGS, MAX_ITEMS } from './Constants'
 
-const FILTER_KEY = []
 const ALL_ALC_TYPES = new Set(Array.from(ALCOHOL_TYPES.keys()))
-const ALC_TAGS: Alcoholic[] = [
-  'All',
-  'Alcoholic',
-  'Non alcoholic',
-  'Optional alcohol',
-]
 export default function Main() {
   const [ingredientMap, setIngredientMap] = useState<Map<string, number>>(
     new Map()
@@ -23,10 +16,11 @@ export default function Main() {
   const [alcs, setAlcs] = useState(new Set(ALL_ALC_TYPES))
   const [sortKey, setSortKey] = useState(SORT_VALS[0])
   const [alcoholic, setAlcoholic] = useState<Alcoholic>('All')
-  const [curPage, setCurPage] = useState(1)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const [showFavorites, setShowFavorites] = useState(false)
   const [drinks, setDrinks] = useState([...Drinks])
+  const [curPage, setCurPage] = useState(0)
+  const [pageCount, setPageCount] = useState(0)
 
   let addDrink = (name: string, ingredients: string[]) => {
     if (favorites.has(name)) return
@@ -57,7 +51,11 @@ export default function Main() {
   }
 
   let toggleCheckbox = (alc: string) => {
-    // console.log('what')
+    if (alc === 'Select/Deselect All') {
+      if (alcs.size === ALL_ALC_TYPES.size) setAlcs(new Set())
+      else setAlcs(new Set(ALL_ALC_TYPES))
+      return
+    }
     let temp = alcs
     if (alcs.has(alc)) {
       temp.delete(alc)
@@ -72,7 +70,6 @@ export default function Main() {
     alcs.forEach((alc) => {
       ALCOHOL_TYPES.get(alc)?.forEach((a) => ingredientSet.add(a))
     })
-    // console.log(ingredientSet)
     let temp = [...Drinks]
     if (showFavorites) temp = temp.filter((drink) => favorites.has(drink.name))
     if (alcoholic !== 'All')
@@ -86,10 +83,7 @@ export default function Main() {
       return false
     })
     return temp
-    // setDrinks(temp)
   }
-
-  let filterAlcoholic = () => {}
 
   let sortData = (data: Drink[]) => {
     let fn: (a: Drink, b: Drink) => number
@@ -100,39 +94,22 @@ export default function Main() {
       case 'Alphabetically - Z to A':
         fn = (a: Drink, b: Drink) => b.name.localeCompare(a.name)
         break
-      case 'Ingredients - Low to High':
+      case 'Ingredients - Asc':
         fn = (a: Drink, b: Drink) => a.numIngredients - b.numIngredients
         break
-      case 'Ingredients - High to Low':
+      case 'Ingredients - Dsc':
         fn = (a: Drink, b: Drink) => b.numIngredients - a.numIngredients
         break
     }
     return data.sort((a: Drink, b: Drink) => fn(a, b))
-    // setDrinks([...drinks])
-    // let temp = drinks
-    // temp.sort((a: Drink, b: Drink) => fn(a, b))
-    // setDrinks(temp)
   }
 
-  let checkboxes: JSX.Element[] = []
-  ALL_ALC_TYPES.forEach((type) => {
-    checkboxes.push(
-      <div>
-        <input
-          type='checkbox'
-          value={type}
-          checked={alcs.has(type)}
-          onChange={() => toggleCheckbox(type)}
-        />
-        <label>{type}</label>
-      </div>
-    )
-  })
   useEffect(() => {
     console.log('rerender')
     let temp = filterTypes()
     temp = sortData(temp)
     setDrinks(temp)
+    setPageCount(Math.ceil(temp.length / MAX_ITEMS))
   }, [alcs, alcoholic, sortKey, showFavorites, favorites])
 
   return (
@@ -140,55 +117,69 @@ export default function Main() {
       {/* {drinks.length} {Array.from(favorites)} */}
       <div className={css.titleText}>
         <h1 className={css.title}>ivrogne</h1>
-        <h2 className={css.subtitle}>drinking alone again I see</h2>
+        <h2 className={css.subtitle}>drinking alone again I see...</h2>
       </div>
       <div className={css.contentContainer}>
         <div className={css.menu}>
           <Dropdown
-            title='Sort By'
+            title='Sort'
             curItem={sortKey}
             setItem={setSortKey}
             values={SORT_VALS}
           />
-          <Dropdown
-            title='Alcoholic'
-            curItem={alcoholic}
-            setItem={setAlcoholic}
-            values={ALC_TAGS}
+
+          <div className={css.alcoholic}>
+            <p className={css.optionTitle}>Alcoholic</p>
+            {ALC_TAGS.map((alc) => {
+              return (
+                <div
+                  className={css.inputGroup}
+                  onClick={() => setAlcoholic(alc)}
+                >
+                  <span>
+                    <input
+                      type='radio'
+                      value={alc}
+                      name='alcType'
+                      onChange={() => setAlcoholic(alc)}
+                      checked={alcoholic === alc}
+                    />
+                  </span>
+                  <label onClick={() => setAlcoholic(alc)}>{alc}</label>
+                </div>
+              )
+            })}
+          </div>
+
+          <MultipleDropdown
+            title='Alcohol Type:'
+            items={alcs}
+            values={['Select/Deselect All'].concat(Array.from(ALL_ALC_TYPES))}
+            disabled={alcoholic !== 'All' && alcoholic !== 'Alcoholic'}
+            selectItem={(item) => toggleCheckbox(item)}
           />
-          {(alcoholic === 'All' || alcoholic === 'Alcoholic') && (
-            <div className={css.alcoholTypes}>
-              Alcohol Type
-              <div>
+
+          <div className={css.favoriteGroup}>
+            <div className={css.optionTitle}>Other</div>
+            <div className={css.inputGroup}>
+              <span>
                 <input
                   type='checkbox'
-                  value='all'
-                  checked={alcs.size === ALL_ALC_TYPES.size}
-                  onChange={() => {
-                    if (alcs.size === ALL_ALC_TYPES.size) setAlcs(new Set())
-                    else setAlcs(new Set(ALL_ALC_TYPES))
-                  }}
+                  value='false'
+                  checked={showFavorites}
+                  onChange={() => setShowFavorites(!showFavorites)}
                 />
-                <label>Select/Deselect All</label>
-              </div>
-              {checkboxes.map((a) => a)}
+              </span>
+              <label>Favorites</label>
             </div>
-          )}
-          <div className={css.favorites}>
-            <input
-              type='checkbox'
-              value='false'
-              checked={showFavorites}
-              onChange={() => setShowFavorites(!showFavorites)}
-            />
-            <label>Favorites</label>
           </div>
-          <div className={css.ingredients}>
-            Necessary Ingredients
-            {ingredientList.map((ingredient, _) => (
-              <p key={ingredient}>{ingredient}</p>
-            ))}
-          </div>
+
+          <MultipleDropdown
+            title='Necessary Ingredients'
+            values={ingredientList}
+            disabled={false}
+            selectItem={() => {}}
+          />
         </div>
         <div className={css.drinks}>
           {drinks.length ? (
