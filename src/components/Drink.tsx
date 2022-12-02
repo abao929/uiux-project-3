@@ -69,21 +69,4 @@ let DrinkCard = ({ drink, add, remove, addedInit }: Props) => {
   )
 }
 
-// let DrinkPage = ({
-// }: drink) => {
-//   console.log(ingredients, measures)
-//   return (
-//     <div>
-//       {strDrink}
-//       <img
-//         src={require(`../data/${thumbnailFilename}`)}
-//         alt={`${strDrink}`}
-//       ></img>
-//       <h2>Ingredients:</h2>
-//       {zippedIngredients.map((ele, _) => ele)}
-//       <div className='instr'>{strInstructions}</div>
-//     </div>
-//   )
-// }
-
 export { DrinkCard }

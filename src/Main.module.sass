@@ -16,9 +16,7 @@ html
 	gap: 1.5em
 	grid-template-columns: repeat(2, 1fr)
 	grid-template-rows: 1fr
-	@media (max-width: 992px)
-		grid-template-columns: repeat(3, 1fr)
-	@media (max-width: 480px)
+	@media (max-width: 800px)
 		grid-template-columns: repeat(1, 1fr)
 
 
@@ -31,6 +29,9 @@ html
 	display: grid
 	grid-template-columns: 1fr 4fr
 	align-items: start
+	@media (max-width: 800px)
+		grid-template-columns: 1fr
+	
 
 .title
 	font: 400 clamp(2rem, 7vw, 5rem) scotch-display
@@ -50,6 +51,12 @@ html
 	border-radius: .5rem
 	padding: 1.5rem 1rem
 	margin-right: calc(max(3rem, 3vw))
+	@media (max-width: 800px)
+		position: relative
+		top: 0
+		min-height: 40vh
+		margin-right: 0
+		width: 100%
 
 .optionTitle
 	font: 300 calc(max(1.25rem, 1vw)) Roboto
