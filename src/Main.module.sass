@@ -72,3 +72,32 @@ html
 		padding: .25em
 	label
 		cursor: pointer
+
+.pages
+	padding: 2rem 0
+	display: flex
+	flex-direction: row
+	justify-content: center
+	align-items: center
+	gap: .5em
+	.dots, .pageBtn
+		display: flex
+		justify-content: center
+		align-items: center
+		width: calc(max(2rem, 2vw)) 
+		height: calc(max(2rem, 2vw))
+	.pageBtn
+		border-radius: .5em
+		text-align: center
+		background-color: $primary
+		cursor: pointer
+		transition: all 0.3s ease-in-out
+		&:hover
+			background-color: $primary-tint-1
+		&.selected
+			border: 2px solid $primary-shade-2
+	.arrow
+		&:first-child
+			transform: rotate(90deg)
+		&:last-child
+			transform: rotate(-90deg)

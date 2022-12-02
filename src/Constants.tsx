@@ -216,4 +216,6 @@ const ALC_TAGS: Alcoholic[] = [
 
 const MAX_ITEMS = 20
 
-export { SORT_VALS, ALCOHOL_TYPES, ALC_TAGS, MAX_ITEMS }
+const NUM_PAGES = 9
+
+export { SORT_VALS, ALCOHOL_TYPES, ALC_TAGS, MAX_ITEMS, NUM_PAGES }

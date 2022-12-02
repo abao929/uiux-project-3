@@ -37,7 +37,10 @@ let Dropdown = ({ title, curItem, setItem, values, disabled }: Props) => {
           {values.map((val, _) => (
             <li
               className={`${css.option} ${val === curItem && css.active}`}
-              onClick={() => setItem(val)}
+              onClick={() => {
+                setItem(val)
+                setOpen(false)
+              }}
             >
               {val}
             </li>

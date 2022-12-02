@@ -3,9 +3,16 @@ import './global.sass'
 import { DrinkCard } from './components/Drink'
 import { Drinks } from './data/drinks'
 import { Dropdown, MultipleDropdown } from './components/Dropdown'
+import { ReactComponent as DropdownArrow } from './components/assets/icons/dropdown-arrow.svg'
 import css from './Main.module.sass'
 import { Drink, Alcoholic } from './data/types'
-import { SORT_VALS, ALCOHOL_TYPES, ALC_TAGS, MAX_ITEMS } from './Constants'
+import {
+  SORT_VALS,
+  ALCOHOL_TYPES,
+  ALC_TAGS,
+  MAX_ITEMS,
+  NUM_PAGES,
+} from './Constants'
 
 const ALL_ALC_TYPES = new Set(Array.from(ALCOHOL_TYPES.keys()))
 export default function Main() {
@@ -19,8 +26,8 @@ export default function Main() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
   const [showFavorites, setShowFavorites] = useState(false)
   const [drinks, setDrinks] = useState([...Drinks])
-  const [curPage, setCurPage] = useState(0)
-  const [pageCount, setPageCount] = useState(0)
+  const [curPage, setCurPage] = useState(1)
+  const [range, setRange] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9])
 
   let addDrink = (name: string, ingredients: string[]) => {
     if (favorites.has(name)) return
@@ -104,17 +111,68 @@ export default function Main() {
     return data.sort((a: Drink, b: Drink) => fn(a, b))
   }
 
+  let calcRange = (dataLen: number): number[] => {
+    let totalPages = Math.ceil(dataLen / MAX_ITEMS)
+    if (totalPages <= NUM_PAGES)
+      return Array(totalPages)
+        .fill(0)
+        .map((_, i) => i + 1)
+    if (curPage <= 5) return [1, 2, 3, 4, 5, 6, 7, -1, totalPages]
+    if (curPage >= totalPages - 5)
+      return [
+        1,
+        -1,
+        totalPages - 6,
+        totalPages - 5,
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ]
+    return [
+      1,
+      -1,
+      curPage - 2,
+      curPage - 1,
+      curPage,
+      curPage + 1,
+      curPage + 2,
+      -1,
+      totalPages,
+    ]
+  }
+
+  let pageBtn = (page: number) => (
+    <div
+      className={`${css.pageBtn} ${page === curPage && css.selected}`}
+      onClick={() => setCurPage(page)}
+    >
+      {page}
+    </div>
+  )
+  let dots = <div className={css.dots}>. . .</div>
+
+  let scrollTop = () => {
+    window.scrollTo({ top: 0, left: 0 })
+  }
+
   useEffect(() => {
-    console.log('rerender')
     let temp = filterTypes()
+    if (JSON.stringify(temp) !== JSON.stringify(drinks)) setCurPage(1)
     temp = sortData(temp)
     setDrinks(temp)
-    setPageCount(Math.ceil(temp.length / MAX_ITEMS))
+    setRange(calcRange(temp.length))
+    scrollTop()
   }, [alcs, alcoholic, sortKey, showFavorites, favorites])
+
+  useEffect(() => {
+    setRange(calcRange(drinks.length))
+    scrollTop()
+  }, [curPage])
 
   return (
     <div className={css.container}>
-      {/* {drinks.length} {Array.from(favorites)} */}
       <div className={css.titleText}>
         <h1 className={css.title}>ivrogne</h1>
         <h2 className={css.subtitle}>drinking alone again I see...</h2>
@@ -181,23 +239,47 @@ export default function Main() {
             selectItem={() => {}}
           />
         </div>
-        <div className={css.drinks}>
-          {drinks.length ? (
-            drinks.map((ele, _) => (
-              <DrinkCard
-                key={ele.name}
-                drink={ele}
-                add={addDrink}
-                remove={removeDrink}
-                addedInit={favorites.has(ele.name)}
-              />
-            ))
-          ) : (
-            <div>Please select some alcohol types to get started</div>
+        <div>
+          <div className={css.drinks}>
+            {drinks.length ? (
+              drinks
+                .slice((curPage - 1) * MAX_ITEMS, curPage * MAX_ITEMS)
+                .map((ele, _) => (
+                  <DrinkCard
+                    key={ele.name}
+                    drink={ele}
+                    add={addDrink}
+                    remove={removeDrink}
+                    addedInit={favorites.has(ele.name)}
+                  />
+                ))
+            ) : (
+              <div>Please select some alcohol types to get started</div>
+            )}
+          </div>
+          {drinks.length > 0 && (
+            <div className={css.pages}>
+              <div
+                className={css.arrow}
+                onClick={() => setCurPage(Math.max(curPage - 1, 1))}
+              >
+                <DropdownArrow />
+              </div>
+              {range.map((n) => (n === -1 ? dots : pageBtn(n)))}
+              <div
+                className={css.arrow}
+                onClick={() =>
+                  setCurPage(
+                    Math.min(curPage + 1, Math.ceil(drinks.length / MAX_ITEMS))
+                  )
+                }
+              >
+                <DropdownArrow />
+              </div>
+            </div>
           )}
         </div>
       </div>
-      {/* <DrinkPage {...x} /> */}
     </div>
   )
 }
